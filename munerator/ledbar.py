@@ -1,14 +1,3 @@
-"""Display game events on ledbar
-
-Usage:
-  munerator [options] ledbar
-
-Options:
-  -v --verbose          Verbose logging
-  --context-socket url  ZMQ socket for context events [default: tcp://quake.brensen.com:9002]
-
-"""
-from docopt import docopt
 import zmq
 import logging
 log = logging.getLogger(__name__)
@@ -57,12 +46,10 @@ def update_live(in_socket):
             db['clients'] = {}
 
 
-def main(argv):
-    args = docopt(__doc__, argv=argv)
-
+def main(args):
     context = zmq.Context()
     in_socket = context.socket(zmq.SUB)
-    in_socket.connect(args['--context-socket'])
+    in_socket.connect(args['context-socket'])
 
     filters = ['initgame', 'shutdowngame', 'clientdisconnect', 'clientbegin', 'clientuserinfochanged', 'hit', 'kill']
     add_filter = partial(in_socket.setsockopt, zmq.SUBSCRIBE)

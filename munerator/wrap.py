@@ -1,20 +1,14 @@
-"""Wrap game output
-
-Usage:
-  munerator [options] wrap <cmd>
-
-Options:
-  -v --verbose      Verbose logging
-  --raw-socket url  ZMQ socket for raw logline [default: tcp://127.0.0.1:9000]
-
-"""
-from docopt import docopt
 import zmq
 import logging
 log = logging.getLogger(__name__)
 
 import time
 from subprocess import Popen, PIPE
+
+mandatory_options = """
+Usage:
+    munerator wrap <cmd>
+"""
 
 
 def wrap(socket, command):
@@ -30,11 +24,9 @@ def wrap(socket, command):
             socket.send_string(msg)
 
 
-def main(argv):
-    args = docopt(__doc__, argv=argv)
-
+def main(args):
     context = zmq.Context()
     socket = context.socket(zmq.PUSH)
-    socket.connect(args['--raw-socket'])
+    socket.connect(args['raw-socket'])
 
-    wrap(socket, args['<cmd>'])
+    wrap(socket, args['command'])

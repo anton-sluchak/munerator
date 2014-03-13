@@ -16,6 +16,7 @@ setup(
     url='https://github.com/aequitas/munerator',
     install_requires=[
         'docopt',
+        'rcfile',
         'pyzmq',
         'codernitydb'
     ],

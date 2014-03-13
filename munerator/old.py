@@ -1,15 +1,3 @@
-"""Translate events
-
-Usage:
-  munerator [options] old
-
-Options:
-  -v --verbose          Verbose logging
-  --context-socket url  ZMQ socket for context events [default: tcp://quake.brensen.com:9002]
-  --old-api url         URL to old API [default: http://quake.ijohan.nl/events]
-
-"""
-from docopt import docopt
 import zmq
 import logging
 log = logging.getLogger(__name__)
@@ -40,13 +28,11 @@ def proxy_to_old_api(in_socket, base_url):
             log.error('failed', exc_info=True)
 
 
-def main(argv):
-    args = docopt(__doc__, argv=argv)
-
+def main(args):
     context = zmq.Context()
     in_socket = context.socket(zmq.SUB)
-    in_socket.connect(args['--context-socket'])
+    in_socket.connect(args['context-socket'])
     in_socket.setsockopt(zmq.SUBSCRIBE, 'say')
     in_socket.setsockopt(zmq.SUBSCRIBE, 'initgame')
 
-    proxy_to_old_api(in_socket, args['--old-api'])
+    proxy_to_old_api(in_socket, args['old-api'])

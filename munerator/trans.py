@@ -1,15 +1,3 @@
-"""Translate events
-
-Usage:
-  munerator [options] trans
-
-Options:
-  -v --verbose         Verbose logging
-  --raw-socket url     ZMQ socket for raw logline [default: tcp://127.0.0.1:9000]
-  --events-socket url  ZMQ socket for raw events [default: tcp://127.0.0.1:9001]
-
-"""
-from docopt import docopt
 import zmq
 import logging
 log = logging.getLogger(__name__)
@@ -59,14 +47,12 @@ def eventstream(in_socket, out_socket):
             out_socket.send_json(data)
 
 
-def main(argv):
-    args = docopt(__doc__, argv=argv)
-
+def main(args):
     context = zmq.Context()
     in_socket = context.socket(zmq.PULL)
-    in_socket.bind(args['--raw-socket'])
+    in_socket.bind(args['raw-socket'])
 
     out_socket = context.socket(zmq.PUSH)
-    out_socket.connect(args['--events-socket'])
+    out_socket.connect(args['events-socket'])
 
     eventstream(in_socket, out_socket)

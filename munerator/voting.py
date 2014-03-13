@@ -1,9 +1,12 @@
 from CodernityDB.database import Database
 
 
-def main(argv):
+def main(args):
     db = Database('db')
-    db.create()
+    if not db:
+        db.create()
+    else:
+        db.open()
 
     for x in xrange(100):
         print db.insert(dict(x=x))

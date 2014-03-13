@@ -1,14 +1,3 @@
-"""Store live data in shelve
-
-Usage:
-  munerator [options] live
-
-Options:
-  -v --verbose      Verbose logging
-  --context-socket  ZMQ socket for conext event [default: tcp://127.0.0.1:9002]
-
-"""
-from docopt import docopt
 import zmq
 import logging
 log = logging.getLogger(__name__)
@@ -57,9 +46,7 @@ def update_live(in_socket, db_file):
         db.close()
 
 
-def main(argv):
-    args = docopt(__doc__, argv=argv)
-
+def main(args):
     context = zmq.Context()
     in_socket = context.socket(zmq.SUB)
     in_socket.connect(args['--context-socket'])

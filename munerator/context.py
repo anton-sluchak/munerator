@@ -1,15 +1,3 @@
-"""Add game and player context to events
-
-Usage:
-  munerator [options] context
-
-Options:
-  -v --verbose          Verbose logging
-  --events-socket url   ZMQ socket for raw events [default: tcp://127.0.0.1:9001]
-  --context-socket url  ZMQ socket for context events [default: tcp://0.0.0.0:9002]
-
-"""
-from docopt import docopt
 import zmq
 import logging
 log = logging.getLogger(__name__)
@@ -68,15 +56,13 @@ class GameContext(object):
             out_socket.send_string("%s %s" % (data.get('kind'), json.dumps(data)))
 
 
-def main(argv):
-    args = docopt(__doc__, argv=argv)
-
+def main(args):
     context = zmq.Context()
     in_socket = context.socket(zmq.PULL)
-    in_socket.bind(args['--events-socket'])
+    in_socket.bind(args['events-socket'])
 
     out_socket = context.socket(zmq.PUB)
-    out_socket.bind(args['--context-socket'])
+    out_socket.bind(args['context-socket'])
 
     gc = GameContext()
 
